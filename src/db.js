@@ -11,6 +11,7 @@ export function connectDB() {
     mongoose.set( 'useFindAndModify', false );
     mongoose.set( 'useNewUrlParser', true );
     mongoose.set( 'useUnifiedTopology', true );
+    mongoose.set('useCreateIndex', true);
 
     mongoose.connect(`mongodb://${USER}:${PASS}@localhost:${PORT}/${DB}?authSource=admin`)
     .then( () => console.log('DB connected') )
