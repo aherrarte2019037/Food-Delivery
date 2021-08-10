@@ -16,7 +16,7 @@ app.disable('x-powered-by');
 connectDB();
 
 //Rutas
-app.use('/api/user', UserRoutes);
+app.use('/api/users', UserRoutes);
 
 //Iniciar servidor
 app.listen( process.env.PORT || app.get('PORT'), () => {
