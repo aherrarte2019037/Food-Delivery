@@ -6,7 +6,7 @@ import UserRoutes from './routes/user.route.js';
 const app = express();
 
 //Configuración
-app.set('PORT', 3000);
+app.set('PORT', 8000);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
