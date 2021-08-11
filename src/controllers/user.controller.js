@@ -7,13 +7,13 @@ export default class UserController {
             const data = req.body;
             if( data?.image === null ) data.image = undefined;
             const user = await UserModel.create(data);
-            res.status(201).send({ success: true, data: user })
+            res.status(201).send({ success: true, message: 'Registro exitoso', data: user })
 
         } catch (error) {
             if( error?.message === 'User validation failed: email: email already exists' ) {
                 return res.status(500).send({ success: false, message:'Correo en uso, intenta con otro', error });
             }
-            res.status(500).send({ success: false, message:'Error al registrar usuario', error });
+            res.status(500).send({ success: false, message:'Error al registrarse', error });
         }
     }
 
