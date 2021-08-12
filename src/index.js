@@ -2,10 +2,13 @@ import express from 'express';
 import cors from 'cors';
 import { connectDB } from '../src/db.js';
 import UserRoutes from './routes/user.route.js';
+import Passport from 'passport';
+import './auth/passport.js';
 
 const app = express();
 
 //Configuración
+Passport.initialize();
 app.set('PORT', 8000);
 app.use(cors());
 app.use(express.json());
