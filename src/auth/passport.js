@@ -42,5 +42,5 @@ Passport.use( 'authorize_user', new PassportJwt.Strategy( options, async(jwtPayl
 }));
 
 function getUserToken( user ) {
-    return Jwt.sign({ sub : user.id, }, secret, { expiresIn: '1day' });
+    return Jwt.sign({ sub : user.id, role: user?.role?.name }, secret);
 };
