@@ -8,7 +8,11 @@ const UserSchema = mongoose.Schema({
     firstName  : { type: String, required: [true, 'Firstname is required'], maxLength: 25 },
     lastName   : { type: String, required: [true, 'Lastname is required'], maxLength: 25 },
     image      : { type: String, default: 'avatarImage.png' },
-    isAvailable: { type: Boolean, default: true }
+    isAvailable: { type: Boolean, default: true },
+    role       : {
+        name : { type: String, enum: ['CLIENT', 'ADMIN', 'DELIVERY'], default: 'CLIENT' },
+        image: { type: String, default: 'roleImage.png' }
+    }
 })
 
 UserSchema.plugin(uniqueValidator, { message: '{PATH} already exists' });
