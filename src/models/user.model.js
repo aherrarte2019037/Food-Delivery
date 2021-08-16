@@ -9,9 +9,12 @@ const UserSchema = mongoose.Schema({
     lastName   : { type: String, required: [true, 'Lastname is required'], maxLength: 25 },
     image      : { type: String, default: 'avatarImage.png' },
     isAvailable: { type: Boolean, default: true },
-    role       : {
-        name : { type: String, enum: ['CLIENT', 'ADMIN', 'DELIVERY'], default: 'CLIENT' },
-        image: { type: String, default: 'roleImage.png' }
+    roles      : {
+        type: [{
+            name : { type: String, enum: ['CLIENT', 'RESTAURANT', 'DELIVERY'], default: 'CLIENT' },
+            image: { type: String, default: 'roleImage.png' }
+        }],
+        default: { name: 'CLIENT', image: 'roleImage.png' }
     }
 })
 
