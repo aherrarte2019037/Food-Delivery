@@ -15,6 +15,7 @@ export default class UserController {
             if( error?.message === 'User validation failed: email: email already exists' ) {
                 return res.status(500).send({ success: false, message:'Correo en uso, intenta con otro' });
             }
+            console.log(error);
             res.status(500).send({ success: false, message:'Error al registrarse' });
         }
     }

@@ -14,7 +14,7 @@ const UserSchema = mongoose.Schema({
             name : { type: String, enum: ['CLIENT', 'RESTAURANT', 'DELIVERY'], default: 'CLIENT' },
             image: { type: String, default: '' }
         }],
-        default: { name: 'CLIENT', image: 'roleImage.png' }
+        default: { name: 'CLIENT', image: 'assets/images/client-role.png' }
     }
 })
 
@@ -23,13 +23,13 @@ UserSchema.plugin(uniqueValidator, { message: '{PATH} already exists' });
 UserSchema.pre( 'save', async function(next) {
     const user = this;
 
-    user.roles.forEach( (role,index) => {
+    user.roles?.forEach( (role,index) => {
         if( role?.name === 'CLIENT' ) user.roles[index].image = 'assets/images/client-role.png';
         if( role?.name === 'RESTAURANT' ) user.roles[index].image = 'assets/images/restaurant-role.png';
         if( role?.name === 'DELIVERY' ) user.roles[index].image = 'assets/images/delivery-role.png';
-     });
+    });
 
-
+    if(user?.roles === null) user.roles = { name: 'CLIENT', image: 'assets/images/client-role.png' };
     if( !user.isModified('password') ) return next(); 
 
     const hashPassword = await bcrypt.hash( user.password, 10 );
