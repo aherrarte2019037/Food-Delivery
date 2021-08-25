@@ -7,7 +7,7 @@ const UserSchema = mongoose.Schema({
     password   : { type: String, required: [true, 'Password is required'], minLength: 5, maxLength: 25 },
     firstName  : { type: String, required: [true, 'Firstname is required'], maxLength: 25 },
     lastName   : { type: String, required: [true, 'Lastname is required'], maxLength: 25 },
-    image      : { type: String, default: 'avatarImage.png' },
+    image      : { type: String, default: 'assets/images/profile-image.png' },
     isAvailable: { type: Boolean, default: true },
     roles      : {
         type: [{
