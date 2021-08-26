@@ -1,11 +1,20 @@
 import express from 'express';
+import { readFile } from 'fs/promises'
 import cors from 'cors';
 import { connectDB } from '../src/db.js';
 import UserRoutes from './routes/user.route.js';
 import Passport from 'passport';
 import './auth/passport.js';
+import firebaseAdmin from 'firebase-admin';
 
 const app = express();
+
+const firebaseCredentials = JSON.parse(await readFile('./src/accountStorageKey.json', 'utf-8'));
+
+//Iniciar firebase
+firebaseAdmin.initializeApp({
+    credential: firebaseAdmin.credential.cert(firebaseCredentials)
+});
 
 //Configuración
 Passport.initialize();

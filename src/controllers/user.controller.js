@@ -1,10 +1,11 @@
 import UserModel from '../models/user.model.js';
 import { isValidId } from '../utils/validators.js';
 import Passport from 'passport';
+import { uploadCloudStorage } from '../utils/cloudStorage.js';
 
 export default class UserController {
 
-    static async register(req, res) {
+    static async registerWithImage(req, res) {
         try {
             const data = req.body;
             if( data?.image === null ) data.image = undefined;
@@ -16,6 +17,31 @@ export default class UserController {
                 return res.status(500).send({ success: false, message:'Correo en uso, intenta con otro' });
             }
             res.status(500).send({ success: false, message:'Error al registrarse' });
+        }
+    }
+
+    static async register(req, res) {
+        try {
+            const data = JSON.parse(req.body.user);
+            if(!data) return res.status(500).send({ success: false, message:'Datos incompletos, intenta otra vez' });
+        
+            const files = req.files;
+            if(files?.length > 0) {
+                const imagePath = `image_${Date.now()}`;
+                const url = await uploadCloudStorage(files[0], imagePath);
+                data.image = url;
+            }
+
+            data.image = data.image ?? undefined;
+            const user = await UserModel.create(data);
+
+            res.status(201).send({ success: true, message: 'Registro exitoso', data: user })
+
+        } catch (error) {
+            if( error?.message === 'User validation failed: email: email already exists' ) {
+                return res.status(500).send({ success: false, message:'Correo en uso, intenta con otro' });
+            }
+            res.status(500).send({ success: false, message: 'Error al registrarse' });
         }
     }
 
