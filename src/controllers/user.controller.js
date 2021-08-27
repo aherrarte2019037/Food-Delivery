@@ -5,21 +5,6 @@ import { uploadCloudStorage } from '../utils/cloudStorage.js';
 
 export default class UserController {
 
-    static async registerWithImage(req, res) {
-        try {
-            const data = req.body;
-            if( data?.image === null ) data.image = undefined;
-            const user = await UserModel.create(data);
-            res.status(201).send({ success: true, message: 'Registro exitoso', data: user })
-
-        } catch (error) {
-            if( error?.message === 'User validation failed: email: email already exists' ) {
-                return res.status(500).send({ success: false, message:'Correo en uso, intenta con otro' });
-            }
-            res.status(500).send({ success: false, message:'Error al registrarse' });
-        }
-    }
-
     static async register(req, res) {
         try {
             const data = JSON.parse(req.body.user);
