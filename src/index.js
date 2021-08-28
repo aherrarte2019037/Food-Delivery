@@ -9,7 +9,7 @@ import firebaseAdmin from 'firebase-admin';
 
 const app = express();
 
-const firebaseCredentials = JSON.parse(await readFile('./src/accountStorageKey.json', 'utf-8'));
+const firebaseCredentials = JSON.parse(await readFile('./accountStorageKey.json', 'utf-8'));
 
 //Iniciar firebase
 firebaseAdmin.initializeApp({

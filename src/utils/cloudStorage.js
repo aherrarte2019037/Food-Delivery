@@ -5,7 +5,7 @@ import { format } from 'util';
 
 const storage = new Storage({
     projectId: "food-delivery-c47d2",
-    keyFilename: './src/accountStorageKey.json'
+    keyFilename: './accountStorageKey.json'
 });
 const uuid = uuidv4();
 const bucket = storage.bucket("gs://food-delivery-c47d2.appspot.com/");

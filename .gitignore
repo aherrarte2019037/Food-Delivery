@@ -1,4 +1,5 @@
-src/accountStorageKey.json
+#Firebase Credentials
+accountStorageKey.json
 
 # Logs
 logs
