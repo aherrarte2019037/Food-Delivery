@@ -9,16 +9,17 @@ export default class UserController {
         try {
             const data = JSON.parse(req.body.user);
             if(!data) return res.status(500).send({ success: false, message:'Datos incompletos, intenta otra vez' });
-        
+
+            data.image = undefined;
+            const user = await UserModel.create(data);
+
             const files = req.files;
             if(files?.length > 0) {
                 const imagePath = `image_${Date.now()}`;
                 const url = await uploadCloudStorage(files[0], imagePath);
-                data.image = url;
+                const userWithImage = await UserModel.findByIdAndUpdate(user._id, { image: url });
+                return res.status(201).send({ success: true, message: 'Registro exitoso', data: userWithImage })
             }
-
-            data.image = data.image ?? undefined;
-            const user = await UserModel.create(data);
 
             res.status(201).send({ success: true, message: 'Registro exitoso', data: user })
 
