@@ -15,7 +15,8 @@ const UserSchema = mongoose.Schema({
             image: { type: String, default: '' }
         }],
         default: { name: 'CLIENT', image: 'assets/images/client-role.png' }
-    }
+    },
+    createdAt  : { type: Date, default: new Date() }
 })
 
 UserSchema.plugin(uniqueValidator, { message: '{PATH} already exists' });

@@ -6,8 +6,10 @@ import { upload } from '../utils/uploadMulter.js';
 const router = express.Router();
 
 router.get('/', UserController.getAll);
-router.get('/:id', UserController.getById);
+router.get('/:id', AuthMiddleware.authorizeUser, UserController.getById);
 router.post('/register', upload.array('image', 1), UserController.register);
 router.post('/login', UserController.login);
+router.put('/:id', AuthMiddleware.authorizeUser, UserController.editUser);
+router.put('/image/:id', AuthMiddleware.authorizeUser, upload.array('image', 1), UserController.editProfileImage);
 
 export default router;

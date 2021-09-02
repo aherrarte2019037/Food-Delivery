@@ -11,6 +11,7 @@ export default class UserController {
             if(!data) return res.status(500).send({ success: false, message:'Datos incompletos, intenta otra vez' });
 
             data.image = undefined;
+            data.createdAt = undefined;
             const user = await UserModel.create(data);
 
             const files = req.files;
@@ -66,6 +67,43 @@ export default class UserController {
 
         } catch (error) {
             res.status(500).send({ success: false, message: 'Error al obtener usuarios', error });
+        }
+    }
+
+    static async editUser(req, res) {
+        try {
+            const id = req.params.id;
+            const editUser = req.body;
+            if( !isValidId(id) ) return res.status(400).send({ success: false, message: 'Id inválido' })
+
+            const user = await UserModel.findByIdAndUpdate(id, editUser);
+            res.status(201).send({ success: true, message: 'Perfil editado', data: user })
+
+        } catch (error) {
+            if( error?.codeName === 'DuplicateKey' ) {
+                return res.status(500).send({ success: false, message:'Correo en uso, intenta con otro' });
+            }
+            res.status(500).send({ success: false, message: 'Error al editar usuario', error });
+        }    
+    }
+
+    static async editProfileImage(req, res) {
+        try {
+            const id = req.params.id;
+            if( !isValidId(id) ) return res.status(400).send({ success: false, message: 'Id inválido' })
+
+            const files = req.files;
+            if(files?.length > 0) {
+                const imagePath = `image_${Date.now()}`;
+                const url = await uploadCloudStorage(files[0], imagePath);
+                const userWithImage = await UserModel.findByIdAndUpdate(id, { image: url });
+                return res.status(201).send({ success: true, message: 'Imagen de perfil editada', data: userWithImage })
+            }
+
+            res.status(500).send({ success: false, message: 'No hay imagen de perfil', data: user })
+
+        } catch (error) {
+            res.status(500).send({ success: false, message: 'Error al editar imagen de perfil' });
         }
     }
 
