@@ -3,6 +3,7 @@ import { readFile } from 'fs/promises'
 import cors from 'cors';
 import { connectDB } from '../src/db.js';
 import UserRoutes from './routes/user.route.js';
+import ProductCategoryRoutes from './routes/product/category.route.js';
 import Passport from 'passport';
 import './auth/passport.js';
 import firebaseAdmin from 'firebase-admin';
@@ -29,6 +30,7 @@ connectDB();
 
 //Rutas
 app.use('/api/users', UserRoutes);
+app.use('/api/products/categories', ProductCategoryRoutes);
 
 //Iniciar servidor
 app.listen( process.env.PORT || app.get('PORT'), () => {
