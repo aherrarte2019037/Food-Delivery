@@ -12,6 +12,8 @@ export default class UserController {
 
             data.image = undefined;
             data.createdAt = undefined;
+            data._id = undefined;
+            
             const user = await UserModel.create(data);
 
             const files = req.files;

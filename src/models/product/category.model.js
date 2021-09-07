@@ -11,8 +11,8 @@ const ProductCategorySchema = mongoose.Schema({
 ProductCategorySchema.plugin(uniqueValidator, { message: '{PATH} already exists' });
 
 ProductCategorySchema.methods.toJSON = function() {
-    const user = this;
-    const response = user.toObject();
+    const category = this;
+    const response = category.toObject();
     delete response.__v;
     return response;
 };
