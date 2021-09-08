@@ -4,6 +4,8 @@ import cors from 'cors';
 import { connectDB } from '../src/db.js';
 import UserRoutes from './routes/user.route.js';
 import ProductCategoryRoutes from './routes/product/category.route.js';
+import ProductRoutes from './routes/product/product.route.js';
+import ProductCategoryController from './controllers/product/category.controller.js'
 import Passport from 'passport';
 import './auth/passport.js';
 import firebaseAdmin from 'firebase-admin';
@@ -31,8 +33,10 @@ connectDB();
 //Rutas
 app.use('/api/users', UserRoutes);
 app.use('/api/products/categories', ProductCategoryRoutes);
+app.use('/api/products', ProductRoutes);
 
 //Iniciar servidor
 app.listen( process.env.PORT || app.get('PORT'), () => {
     console.log(`Server started on port ${app.get('PORT')}`);
+    ProductCategoryController.createDefaultCategory();
 });

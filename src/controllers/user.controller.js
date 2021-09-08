@@ -27,9 +27,10 @@ export default class UserController {
             res.status(201).send({ success: true, message: 'Registro exitoso', data: user })
 
         } catch (error) {
-            if( error?.message === 'User validation failed: email: email already exists' ) {
-                return res.status(500).send({ success: false, message:'Correo en uso, intenta con otro' });
+            if(error?.errors?.email && error?.errors?.email?.kind === 'unique') {
+                return res.status(500).send({ success: false, message: 'Correo en uso, intenta con otro' });
             }
+            console.log(error)
             res.status(500).send({ success: false, message: 'Error al registrarse' });
         }
     }
