@@ -4,8 +4,8 @@ import { uploadCloudStorage } from '../../utils/cloudStorage.js';
 export default class ProductCategoryController {
 
     static async createDefaultCategory() {
-        const existsDefault = await ProductCategoryModel.findOne({ name : 'Default' });
-        if(!existsDefault) await ProductCategoryModel.create({ _id: '111111111111111111111111', name: 'Default', description: 'Categoría por defecto' });
+        const existsDefault = await ProductCategoryModel.findById('111111111111111111111111');
+        if(!existsDefault) await ProductCategoryModel.create({ _id: '111111111111111111111111', name: 'Predeterminada', description: 'Categoría por defecto' });
     }
 
     static async getRecentCategories(req, res) {
