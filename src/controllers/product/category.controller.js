@@ -10,8 +10,9 @@ export default class ProductCategoryController {
 
     static async getRecentCategories(req, res) {
         try {
-            const recentRecipes = await ProductCategoryModel.find({}).sort({ date: 'descending'}).limit(6);
-            res.status(200).send({ success: true, message: 'Categorías recientes', data: recentRecipes });
+            const recentCategories = await ProductCategoryModel.find({}).sort({ createdAt: 'descending'}).limit(6);
+            console.log(recentCategories);
+            res.status(200).send({ success: true, message: 'Categorías recientes', data: recentCategories });
 
         } catch (error) {
             res.status(500).send({ success: false, message: 'Error al obtener categorías', data: [] });

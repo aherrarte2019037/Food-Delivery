@@ -5,6 +5,16 @@ import { isValidId } from '../../utils/validators.js';
 
 export default class ProductController {
     
+    static async recentProducts(req, res) {
+        try {
+            const recentProducts = await ProductModel.find({}).sort({ createdAt: 'descending'}).limit(6);
+            res.status(200).send({ success: true, message: 'Productos recientes', data: recentProducts });
+
+        } catch (error) {
+            res.status(500).send({ success: false, message: 'Error al obtener productos', data: [] });
+        }
+    }
+    
     static async create(req, res) {
         try {
             const data = JSON.parse(req.body.product);
