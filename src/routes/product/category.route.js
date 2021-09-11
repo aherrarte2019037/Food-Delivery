@@ -5,6 +5,7 @@ import { upload } from '../../middlewares/upload.middleware.js';
 
 const router = express.Router();
 
+router.get('/all', AuthMiddleware.authorizeUser, ProductCategoryController.getAll);
 router.get('/latest', AuthMiddleware.authorizeUser, ProductCategoryController.getRecentCategories);
 router.post('/', upload({ fieldName: 'image', maxFiles: 1 }), AuthMiddleware.authorizeUser, ProductCategoryController.create);
 

@@ -26,8 +26,7 @@ export default class ProductController {
             data.category = data.category ?? undefined;
             
             if(data.category) {
-                if(!isValidId(data.category)) return res.status(400).send({ success: false, message: 'Categoría no encontrada' });
-                const existsCategory = await ProductCategoryModel.findById(data?.category);
+                const existsCategory = await ProductCategoryModel.findOne({ name: new RegExp(data.category, 'i') });
                 if(!existsCategory) return res.status(400).send({ success: false, message: 'Categoría no encontrada' });
             }
             

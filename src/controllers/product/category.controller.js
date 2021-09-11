@@ -8,10 +8,19 @@ export default class ProductCategoryController {
         if(!existsDefault) await ProductCategoryModel.create({ _id: '111111111111111111111111', name: 'Predeterminada', description: 'Categoría por defecto' });
     }
 
+    static async getAll(req, res) {
+        try {
+            const categories = await ProductCategoryModel.find({}).sort({ createdAt: 'descending'});
+            res.status(200).send({ success: true, message: 'Todas las categorías', data: categories });
+
+        } catch (error) {
+            res.status(500).send({ success: false, message: 'Error al obtener categorías', data: [] });
+        }
+    }
+
     static async getRecentCategories(req, res) {
         try {
             const recentCategories = await ProductCategoryModel.find({}).sort({ createdAt: 'descending'}).limit(6);
-            console.log(recentCategories);
             res.status(200).send({ success: true, message: 'Categorías recientes', data: recentCategories });
 
         } catch (error) {
