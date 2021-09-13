@@ -1,8 +1,6 @@
 import mongoose from 'mongoose';
 
 export function connectDB() {
-    const USER = 'root';
-    const PASS = 'root';
     const PORT = 27017;
     const DB = 'food_delivery';
 
@@ -13,7 +11,7 @@ export function connectDB() {
     mongoose.set( 'useUnifiedTopology', true );
     mongoose.set('useCreateIndex', true);
 
-    mongoose.connect(`mongodb://${USER}:${PASS}@localhost:${PORT}/${DB}?authSource=admin`)
+    mongoose.connect(`mongodb://localhost:${PORT}/${DB}`)
     .then( () => console.log('DB connected') )
     .catch( (error) => console.log(`DB connection failed: ${error}`) );
 }
