@@ -1,7 +1,6 @@
 import ProductModel from '../../models/product/product.model.js';
 import ProductCategoryModel from '../../models/product/category.model.js';
 import { uploadCloudStorage } from '../../utils/cloudStorage.js';
-import { isValidId } from '../../utils/validators.js';
 
 export default class ProductController {
     
@@ -20,13 +19,17 @@ export default class ProductController {
             const data = JSON.parse(req.body.product);
             if(!data.name || !data.description || (!data.price && data.price !== 0)) return res.status(500).send({ success: false, message:'Datos incompletos, intenta otra vez' });
 
+            for (const key in data) {
+                if (Object.hasOwnProperty.call(data, key)) {
+                    data[key] = data[key] ?? undefined;
+                }
+            }
+
             data.images = ['assets/images/product-image.png'];
-            data.createdAt = undefined;
-            data._id = undefined;
-            data.category = data.category ?? undefined;
             
             if(data.category) {
                 const existsCategory = await ProductCategoryModel.findOne({ name: new RegExp(data.category, 'i') });
+                data.category = existsCategory._id;
                 if(!existsCategory) return res.status(400).send({ success: false, message: 'Categoría no encontrada' });
             }
             
@@ -53,7 +56,7 @@ export default class ProductController {
             }
 
             if(error?.errors?.name && error?.errors?.name?.kind === 'unique') {
-                return res.status(500).send({ success: false, message: 'Categoría ya creada, intenta con otra' });
+                return res.status(500).send({ success: false, message: 'Producto ya creada, intenta con otro' });
             }
 
             res.status(500).send({ success: false, message: 'Error al crear producto' });
