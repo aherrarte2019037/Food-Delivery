@@ -13,6 +13,28 @@ export default class ProductController {
             res.status(500).send({ success: false, message: 'Error al obtener productos', data: [] });
         }
     }
+
+    static async getGroupByCategory(req, res) {
+        try {
+            const productsGrouped = await ProductModel.aggregate([
+                {"$group" : {_id:"$category", products: { $push: { name: '$name', description: '$description', price: '$price', _id: '$_id', avaialble: '$available' } }}}
+            ]);
+
+            await ProductCategoryModel.populate(productsGrouped, { path: '_id', select: 'name _id' })
+            const result = productsGrouped.map( item => {
+                const category = item._id;
+                delete item._id;
+                
+                item.category = category;
+                return item;
+            });
+
+            res.status(200).send({ success: true, message: 'Productos agrupados por categoría', data: result });
+            
+        } catch (error) {
+            res.status(500).send({ success: false, message: 'Error al obtener productos', data: [] });
+        }
+    }
     
     static async create(req, res) {
         try {
@@ -29,8 +51,8 @@ export default class ProductController {
             
             if(data.category) {
                 const existsCategory = await ProductCategoryModel.findOne({ name: new RegExp(data.category, 'i') });
-                data.category = existsCategory._id;
                 if(!existsCategory) return res.status(400).send({ success: false, message: 'Categoría no encontrada' });
+                data.category = existsCategory._id;
             }
             
             const product = await ProductModel.create(data);
@@ -58,6 +80,8 @@ export default class ProductController {
             if(error?.errors?.name && error?.errors?.name?.kind === 'unique') {
                 return res.status(500).send({ success: false, message: 'Producto ya creada, intenta con otro' });
             }
+
+            console.log(error)
 
             res.status(500).send({ success: false, message: 'Error al crear producto' });
         }
