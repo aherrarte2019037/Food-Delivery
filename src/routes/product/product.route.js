@@ -7,6 +7,6 @@ const router = express.Router();
 
 router.post('/', upload({ fieldName: 'images', maxFiles: 4}), AuthMiddleware.authorizeUser, ProductController.create);
 router.get('/latest', AuthMiddleware.authorizeUser, ProductController.recentProducts);
-router.get('/groupBy/category', AuthMiddleware.authorizeUser, ProductController.getGroupByCategory);
+router.get('/groupBy/:field', AuthMiddleware.authorizeUser, ProductController.groupByField);
 
 export default router;

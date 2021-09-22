@@ -14,22 +14,26 @@ export default class ProductController {
         }
     }
 
-    static async getGroupByCategory(req, res) {
+    static async groupByField(req, res) {
         try {
-            const productsGrouped = await ProductModel.aggregate([
-                {"$group" : {_id:"$category", products: { $push: { name: '$name', description: '$description', price: '$price', _id: '$_id', avaialble: '$available' } }}}
+            const field = req.params.field;
+            if (!field) return res.status(500).send({ success: false, message: 'Falta campo para agrupar', data: [] }); 
+
+            let productsGrouped = await ProductModel.aggregate([
+                {"$group" : {_id: `$${field}`, products: { $push: { name: '$name', description: '$description', price: '$price', _id: '$_id', avaialble: '$available' } }}}
             ]);
 
-            await ProductCategoryModel.populate(productsGrouped, { path: '_id', select: 'name _id' })
-            const result = productsGrouped.map( item => {
-                const category = item._id;
+            if (field === 'category') await ProductCategoryModel.populate(productsGrouped, { path: '_id', select: 'name _id' });
+
+            productsGrouped = productsGrouped.map( item => {
+                const fieldName = item._id;
                 delete item._id;
                 
-                item.category = category;
+                item[field] = fieldName;
                 return item;
             });
 
-            res.status(200).send({ success: true, message: 'Productos agrupados por categoría', data: result });
+            res.status(200).send({ success: true, message: 'Productos agrupados', data: productsGrouped });
             
         } catch (error) {
             res.status(500).send({ success: false, message: 'Error al obtener productos', data: [] });
