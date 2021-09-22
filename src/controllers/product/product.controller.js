@@ -33,7 +33,7 @@ export default class ProductController {
                 return item;
             });
 
-            res.status(200).send({ success: true, message: 'Productos agrupados', data: productsGrouped });
+            res.status(200).send({ success: true, message: 'Productos agrupados', data: productsGrouped ?? [] });
             
         } catch (error) {
             res.status(500).send({ success: false, message: 'Error al obtener productos', data: [] });
