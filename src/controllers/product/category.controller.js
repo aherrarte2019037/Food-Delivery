@@ -1,4 +1,5 @@
 import ProductCategoryModel from '../../models/product/category.model.js';
+import ProductModel from '../../models/product/product.model.js';
 import { uploadCloudStorage } from '../../utils/cloudStorage.js';
 
 export default class ProductCategoryController {
@@ -13,6 +14,20 @@ export default class ProductCategoryController {
             const categories = await ProductCategoryModel.find({}).sort({ createdAt: 'descending'});
             res.status(200).send({ success: true, message: 'Todas las categorías', data: categories });
 
+        } catch (error) {
+            res.status(500).send({ success: false, message: 'Error al obtener categorías', data: [] });
+        }
+    }
+
+    static async getCategoriesWithProducts(req, res) {
+        try {
+            const products = await ProductModel.find().populate('category')
+
+            let categories = products.map( product => product.category);
+            categories = [...new Set(categories)];
+            
+            res.status(200).send({ success: true, message: 'Categorías con productos', data: categories });
+            
         } catch (error) {
             res.status(500).send({ success: false, message: 'Error al obtener categorías', data: [] });
         }
