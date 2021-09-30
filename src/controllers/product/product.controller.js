@@ -20,7 +20,7 @@ export default class ProductController {
             if (!field) return res.status(500).send({ success: false, message: 'Falta campo para agrupar', data: [] }); 
 
             let productsGrouped = await ProductModel.aggregate([
-                {"$group" : {_id: `$${field}`, products: { $push: { name: '$name', description: '$description', price: '$price', _id: '$_id', avaialble: '$available', images: '$images', createdAt: '$createdAt' } }}}
+                {"$group" : {_id: `$${field}`, products: { $push: { name: '$name', description: '$description', price: '$price', _id: '$_id', avaialble: '$available', images: '$images', createdAt: '$createdAt', calories: '$calories' } }}}
             ]);
 
             if (field === 'category') await ProductCategoryModel.populate(productsGrouped, { path: '_id', select: 'name _id' });
@@ -43,7 +43,7 @@ export default class ProductController {
     static async create(req, res) {
         try {
             const data = JSON.parse(req.body.product);
-            if(!data.name || !data.description || (!data.price && data.price !== 0)) return res.status(500).send({ success: false, message:'Datos incompletos, intenta otra vez' });
+            if(!data.name || !data.description || !data.calories || (!data.price && data.price !== 0)) return res.status(500).send({ success: false, message:'Datos incompletos, intenta otra vez' });
 
             for (const key in data) {
                 if (Object.hasOwnProperty.call(data, key)) {
