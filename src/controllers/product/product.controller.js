@@ -20,7 +20,7 @@ export default class ProductController {
             if (!field) return res.status(500).send({ success: false, message: 'Falta campo para agrupar', data: [] }); 
 
             let productsGrouped = await ProductModel.aggregate([
-                {"$group" : {_id: `$${field}`, products: { $push: { name: '$name', description: '$description', price: '$price', _id: '$_id', avaialble: '$available', images: '$images', createdAt: '$createdAt', calories: '$calories' } }}}
+                {"$group" : {_id: `$${field}`, products: { $push: { name: '$name', description: '$description', price: '$price', _id: '$_id', available: '$available', images: '$images', createdAt: '$createdAt', calories: '$calories' } }}}
             ]);
 
             if (field === 'category') await ProductCategoryModel.populate(productsGrouped, { path: '_id', select: 'name _id' });
