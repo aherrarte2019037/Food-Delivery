@@ -5,6 +5,7 @@ import { connectDB } from '../src/db.js';
 import UserRoutes from './routes/user.route.js';
 import ProductCategoryRoutes from './routes/product/category.route.js';
 import ProductRoutes from './routes/product/product.route.js';
+import CartRoutes from './routes/cart.route.js';
 import ProductCategoryController from './controllers/product/category.controller.js'
 import Passport from 'passport';
 import './auth/passport.js';
@@ -34,6 +35,7 @@ connectDB();
 app.use('/api/users', UserRoutes);
 app.use('/api/products/categories', ProductCategoryRoutes);
 app.use('/api/products', ProductRoutes);
+app.use('/api/users/cart', CartRoutes);
 
 //Iniciar servidor
 app.listen( process.env.PORT || app.get('PORT'), () => {

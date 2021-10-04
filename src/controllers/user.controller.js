@@ -2,6 +2,7 @@ import UserModel from '../models/user.model.js';
 import { isValidId } from '../utils/validators.js';
 import Passport from 'passport';
 import { uploadCloudStorage } from '../utils/cloudStorage.js';
+import CartController from './cart.controller.js';
 
 export default class UserController {
 
@@ -15,6 +16,7 @@ export default class UserController {
             data._id = undefined;
             
             const user = await UserModel.create(data);
+            CartController.createCart(user._id);
 
             const files = req.files;
             if(files?.length > 0) {
