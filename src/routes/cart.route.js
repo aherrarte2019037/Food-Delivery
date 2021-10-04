@@ -4,6 +4,8 @@ import AuthMiddleware from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
+router.get('/', AuthMiddleware.authorizeUser, CartController.getUserCart);
+router.get('/purchased', AuthMiddleware.authorizeUser, CartController.getProductsPurchased);
 router.post('/', AuthMiddleware.authorizeUser, CartController.addProductToCart);
 
 export default router;

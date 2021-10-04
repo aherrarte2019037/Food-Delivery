@@ -32,10 +32,10 @@ app.disable('x-powered-by');
 connectDB();
 
 //Rutas
+app.use('/api/users/cart', CartRoutes);
 app.use('/api/users', UserRoutes);
 app.use('/api/products/categories', ProductCategoryRoutes);
 app.use('/api/products', ProductRoutes);
-app.use('/api/users/cart', CartRoutes);
 
 //Iniciar servidor
 app.listen( process.env.PORT || app.get('PORT'), () => {
