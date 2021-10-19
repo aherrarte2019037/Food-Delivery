@@ -69,4 +69,17 @@ export default class CartController {
         }
     }
 
+    static async editCart(req, res) {
+        try {
+            const user = new mongoose.Types.ObjectId(req.body.user._id)
+            const toUpdate = req.body;
+            const cartUpdated = await CartModel.findOneAndUpdate({ user: user }, toUpdate);
+
+            res.status(201).send({ success: true, message: 'Carrito de compras editado', data: cartUpdated });
+
+        } catch (error) {
+            res.status(500).send({ success: false, message: 'Error al editar carrito', error });
+        }
+    }
+
 }
