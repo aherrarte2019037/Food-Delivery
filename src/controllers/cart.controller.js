@@ -2,7 +2,7 @@ import CartModel from '../models/cart.model.js';
 import { isValidId } from '../utils/validators.js';
 import mongoose from 'mongoose';
 import ProductModel from '../models/product/product.model.js';
-import { addProductToShoppingCart } from '../utils/shoppingCart.js';
+import { addProductToShoppingCart, deleteProductFromShoppingCart } from '../utils/shoppingCart.js';
 
 export default class CartController {
 
@@ -47,7 +47,7 @@ export default class CartController {
         try {
             const { product, quantity, user } = req.body;
 
-            if (product === undefined || product === null || quantity === undefined || quantity === null) return res.status(500).send({ success: false, message: 'Faltan datos' });
+            if (!product || !quantity) return res.status(500).send({ success: false, message: 'Faltan datos' });
             if (typeof quantity !== 'number' || quantity < 1) return res.status(500).send({ success: false, message: 'Cantidad inválida, formato incorrecto' });
             if (!isValidId(product)) return res.status(500).send({ success: false, message: 'Id de producto inválido, intenta con otro' });
             
@@ -69,16 +69,33 @@ export default class CartController {
         }
     }
 
-    static async editCart(req, res) {
+    static async deleteProductFromCart(req, res) {
         try {
-            const user = new mongoose.Types.ObjectId(req.body.user._id)
-            const toUpdate = req.body;
-            const cartUpdated = await CartModel.findOneAndUpdate({ user: user }, toUpdate);
+            const { product, quantity, user } = req.body;
 
-            res.status(201).send({ success: true, message: 'Carrito de compras editado', data: cartUpdated });
+            if (!product || !quantity) return res.status(500).send({ success: false, message: 'Faltan datos' });
+            if (typeof quantity !== 'number' || quantity < 1) return res.status(500).send({ success: false, message: 'Cantidad inválida, formato incorrecto' });
+            if (!isValidId(product)) return res.status(500).send({ success: false, message: 'Id de producto inválido, intenta con otro' });
+            
+            const productFound = await ProductModel.findById(product);
+            if (!productFound) return res.status(500).send({ success: false, message: 'Producto no encontrado, intenta con otro' });
+
+            let shoppingCart = await CartModel.findOne({ user: user._id });
+
+            const productIndex = shoppingCart.products.findIndex((item) => item._id.toString() === productFound._id.toString());
+            if (productIndex === -1) return res.status(500).send({ success: false, message: 'El Producto no esta en el carrito, intenta otra vez' });
+
+            shoppingCart = deleteProductFromShoppingCart(productFound, quantity, shoppingCart);
+            await (await shoppingCart.save({ validateBeforeSave: false })).populate('products._id', '-__v').execPopulate();
+
+            const products = shoppingCart.products.map(cartItem => new Object({ quantity: cartItem.quantity, product: cartItem._id }));
+            let response = {...shoppingCart._doc};
+            response.products = products;
+
+            res.status(201).send({ success: true, message: 'Producto eliminado del carrito', data: response });
 
         } catch (error) {
-            res.status(500).send({ success: false, message: 'Error al editar carrito', error });
+            res.status(500).send({ success: false, message: 'Error al eliminar producto del carrito', error });
         }
     }
 
