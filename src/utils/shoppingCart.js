@@ -16,7 +16,7 @@ export function deleteProductFromShoppingCart(product, quantity, shoppingCart) {
     if (quantity >= previusQuantity) shoppingCart.products.splice(productIndex, 1);
     else shoppingCart.products[productIndex].quantity -= quantity;
     
-    shoppingCart.total -= (product.price * quantity);
+    shoppingCart.total -= (product.price * previusQuantity);
     shoppingCart.subTotal = shoppingCart.total;
     
     return shoppingCart;
