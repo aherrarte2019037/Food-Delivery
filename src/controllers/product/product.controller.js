@@ -10,7 +10,7 @@ export default class ProductController {
             res.status(200).send({ success: true, message: 'Productos recientes', data: recentProducts });
 
         } catch (error) {
-            res.status(500).send({ success: false, message: 'Error al obtener productos', data: [] });
+            res.status(500).send({ success: false, message: 'Error al obtener productos', error, data: [] });
         }
     }
 
@@ -36,7 +36,7 @@ export default class ProductController {
             res.status(200).send({ success: true, message: 'Productos agrupados', data: productsGrouped ?? [] });
             
         } catch (error) {
-            res.status(500).send({ success: false, message: 'Error al obtener productos', data: [] });
+            res.status(500).send({ success: false, message: 'Error al obtener productos', error, data: [] });
         }
     }
     

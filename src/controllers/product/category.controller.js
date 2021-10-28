@@ -15,7 +15,7 @@ export default class ProductCategoryController {
             res.status(200).send({ success: true, message: 'Todas las categorías', data: categories });
 
         } catch (error) {
-            res.status(500).send({ success: false, message: 'Error al obtener categorías', data: [] });
+            res.status(500).send({ success: false, message: 'Error al obtener categorías', error, data: [] });
         }
     }
 
@@ -29,7 +29,7 @@ export default class ProductCategoryController {
             res.status(200).send({ success: true, message: 'Categorías con productos', data: categories });
             
         } catch (error) {
-            res.status(500).send({ success: false, message: 'Error al obtener categorías', data: [] });
+            res.status(500).send({ success: false, message: 'Error al obtener categorías', error, data: [] });
         }
     }
 
@@ -39,7 +39,7 @@ export default class ProductCategoryController {
             res.status(200).send({ success: true, message: 'Categorías recientes', data: recentCategories });
 
         } catch (error) {
-            res.status(500).send({ success: false, message: 'Error al obtener categorías', data: [] });
+            res.status(500).send({ success: false, message: 'Error al obtener categorías', error, data: [] });
         }
     }
 

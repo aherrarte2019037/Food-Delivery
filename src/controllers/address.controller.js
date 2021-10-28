@@ -10,7 +10,7 @@ export default class UserController {
             res.status(200).send({ success: true, message: 'Direcciones obtenidas', data: addresses });
 
         } catch (error) {
-            res.status(500).send({ success: false, message: 'Error al obtener direcciones', error });
+            res.status(500).send({ success: false, message: 'Error al obtener direcciones', error, data: [] });
         }
     }
 

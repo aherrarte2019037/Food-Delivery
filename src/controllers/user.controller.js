@@ -71,7 +71,7 @@ export default class UserController {
             res.status(200).send({ success: true, data: users });
 
         } catch (error) {
-            res.status(500).send({ success: false, message: 'Error al obtener usuarios', error });
+            res.status(500).send({ success: false, message: 'Error al obtener usuarios', error, data: [] });
         }
     }
 
