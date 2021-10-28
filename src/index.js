@@ -6,6 +6,7 @@ import UserRoutes from './routes/user.route.js';
 import ProductCategoryRoutes from './routes/product/category.route.js';
 import ProductRoutes from './routes/product/product.route.js';
 import CartRoutes from './routes/cart.route.js';
+import AddressRoutes from './routes/address.route.js';
 import ProductCategoryController from './controllers/product/category.controller.js'
 import Passport from 'passport';
 import './auth/passport.js';
@@ -32,6 +33,7 @@ app.disable('x-powered-by');
 connectDB();
 
 //Rutas
+app.use('/api/users/address', AddressRoutes);
 app.use('/api/users/cart', CartRoutes);
 app.use('/api/users', UserRoutes);
 app.use('/api/products/categories', ProductCategoryRoutes);
