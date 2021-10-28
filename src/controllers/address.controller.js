@@ -37,12 +37,12 @@ export default class UserController {
             const addresses = await AddressModel.find({ user: user._id });
             const nameRepeated = addresses.some(address => address?.name === data.name);
 
-            if (nameRepeated) return res.status(500).send({ success: false, message: 'Nombre de dirección en uso, intenta con otro' });
+            if (nameRepeated) return res.status(500).send({ success: false, message: 'Nombre de dirección en uso' });
 
             const address = await AddressModel.create(data);
             if (!address) return res.status(500).send({ success: false, message: 'Error al crear dirección' });
 
-            res.status(200).send({ success: true, message: 'Dirección creada ', address });
+            res.status(200).send({ success: true, message: 'Dirección creada ', data: address });
 
         } catch (error) {
             res.status(500).send({ success: false, message: 'Error al crear dirección', error });
