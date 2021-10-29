@@ -32,6 +32,7 @@ export default class UserController {
             }
 
             data.user = user._id;
+            data._id = undefined;
             data.createdAt = undefined;
             
             const addresses = await AddressModel.find({ user: user._id });
@@ -41,7 +42,7 @@ export default class UserController {
 
             const address = await AddressModel.create(data);
             if (!address) return res.status(500).send({ success: false, message: 'Error al crear dirección' });
-
+            
             res.status(200).send({ success: true, message: 'Dirección creada ', data: address });
 
         } catch (error) {
