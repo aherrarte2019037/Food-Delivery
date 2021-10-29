@@ -5,7 +5,7 @@ export default class UserController {
     static async getAllByUser(req, res) {
         try {
             const user = req.body.user;            
-            const addresses = await AddressModel.find({ user: user._id }); 
+            const addresses = await AddressModel.find({ user: user._id }).sort({ createdAt: 'descending'});
 
             res.status(200).send({ success: true, message: 'Direcciones obtenidas', data: addresses });
 
