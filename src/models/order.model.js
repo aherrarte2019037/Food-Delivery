@@ -2,12 +2,12 @@ import mongoose from "mongoose";
 
 const OrderSchema = mongoose.Schema({
     user             : { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: [true, 'User is required'] },
-    delivery         : { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: [true, 'Delivery is required'] },
-    deliveryLatitude : { type: Number, required: [true, 'Latitude is required'] },
-    deliveryLongitude: { type: Number, required: [true, 'Latitude is required'] },  
+    delivery         : { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    deliveryLatitude : { type: Number, default: 0 },
+    deliveryLongitude: { type: Number, default: 0 },  
     address          : { type: mongoose.Schema.Types.ObjectId, ref: 'Address', required: [true, 'Address is required'] },
     cart             : { type: mongoose.Schema.Types.ObjectId, ref: 'Cart', required: [true, 'Cart is required'] },    
-    status           : { type: String, enum: ['PAGADO', 'DESPACHADO', 'EN CAMINO', 'ENTREGADO'], default: 'PAGADO'  },
+    status           : { type: String, enum: ['PAGADO', 'DESPACHADO', 'ENTREGANDO', 'ENTREGADO'], default: 'PAGADO'  },
     createdAt        : { type: Date, default: new Date() }
 })
 
