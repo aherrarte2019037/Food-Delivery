@@ -1,5 +1,4 @@
 import OrderModel from '../models/order.model.js';
-import UserModel from '../models/user.model.js';
 import CartModel from '../models/cart.model.js';
 import { isValidId } from '../utils/validators.js';
 
