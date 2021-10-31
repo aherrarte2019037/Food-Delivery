@@ -32,7 +32,6 @@ export default class UserController {
             if(error?.errors?.email && error?.errors?.email?.kind === 'unique') {
                 return res.status(500).send({ success: false, message: 'Correo en uso, intenta con otro' });
             }
-            console.log(error)
             res.status(500).send({ success: false, message: 'Error al registrarse' });
         }
     }
@@ -49,6 +48,17 @@ export default class UserController {
             }
     
         })(req, res, next);
+    }
+
+    static getUserAuthenticated(req, res) {
+        try {
+            const user = req.body.user;
+            res.status(200).send({ success: true, message: 'Usuario autenticado', data: user });
+
+        } catch (error) {
+            console.log(error)
+            res.status(500).send({ success: false, message: 'Error al obtener usuario autenticado' });
+        }
     }
 
     static async getById(req, res) {

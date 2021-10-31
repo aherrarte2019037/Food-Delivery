@@ -6,6 +6,7 @@ import { upload } from '../middlewares/upload.middleware.js';
 const router = express.Router();
 
 router.get('/', UserController.getAll);
+router.get('/authenticated', AuthMiddleware.authorizeUser, UserController.getUserAuthenticated);
 router.get('/:id', AuthMiddleware.authorizeUser, UserController.getById);
 router.post('/register', upload({ fieldName: 'image', maxFiles: 1 }), UserController.register);
 router.post('/login', UserController.login);
