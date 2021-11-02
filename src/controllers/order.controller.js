@@ -37,8 +37,17 @@ export default class OrderController {
             res.status(200).send({ success: true, message: 'Orden creada ', data: response });
 
         } catch (error) {
-            console.log(error)
             res.status(500).send({ success: false, message: 'Error al crear orden', error });
+        }
+    }
+
+    static async getPurchasedCount(req, res) {
+        try {
+            const orders = await OrderModel.countDocuments({});
+            res.status(200).send({ success: true, message: 'Conteo de pedidos', data: orders ?? 0 });
+            
+        } catch (error) {
+            res.status(500).send({ success: false, message: 'Error al obtener compras', error });
         }
     }
 
