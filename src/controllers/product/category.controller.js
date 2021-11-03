@@ -21,7 +21,7 @@ export default class ProductCategoryController {
 
     static async getCategoriesWithProducts(req, res) {
         try {
-            const products = await ProductModel.find().populate('category')
+            const products = await ProductModel.find().sort({ createdAt: 'descending'}).populate('category');
 
             let categories = products.map( product => product.category);
             categories = [...new Set(categories)];

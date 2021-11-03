@@ -8,6 +8,7 @@ export default class AuthMiddleware {
                 res.status(500).send({ success: false, message: 'No autorizado' });
         
             } else {
+                user.password = undefined;
                 req.body.user = user;
                 next();
             }

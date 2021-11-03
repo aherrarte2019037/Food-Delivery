@@ -7,7 +7,7 @@ const OrderSchema = mongoose.Schema({
     deliveryLongitude: { type: Number, default: 0 },  
     address          : { type: mongoose.Schema.Types.ObjectId, ref: 'Address', required: [true, 'Address is required'] },
     cart             : { type: mongoose.Schema.Types.ObjectId, ref: 'Cart', required: [true, 'Cart is required'] },    
-    status           : { type: String, enum: ['PAGADO', 'DESPACHADO', 'ENCAMINO', 'ENTREGADO'], default: 'ENCAMINO'  },
+    status           : { type: String, enum: ['PAGADO', 'DESPACHADO', 'ENCAMINO', 'ENTREGADO'], default: 'PAGADO'  },
     createdAt        : { type: Date, default: new Date() }
 })
 
