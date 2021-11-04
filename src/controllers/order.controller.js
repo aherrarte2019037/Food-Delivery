@@ -16,7 +16,7 @@ export default class OrderController {
 
     static async groupByStatus(req ,res) {
         try {
-            let orders = await OrderModel.find({}).populate('delivery address').populate('user', '-password').populate({ path: 'cart', populate: { path: 'products._id' } });            
+            let orders = await OrderModel.find({}).populate('delivery address').populate('user', '-password').populate({ path: 'cart', populate: { path: 'products._id', populate: { path: 'category' } } });            
             orders = orders.map(element => {
                 let order = element.toObject();  
                 const products = order.cart.products.map(product => new Object({ quantity: product.quantity, product: product._id } ));
