@@ -1,5 +1,6 @@
 import OrderModel from '../models/order.model.js';
 import CartModel from '../models/cart.model.js';
+import UserModel from '../models/user.model.js';
 import { isValidId } from '../utils/validators.js';
 
 export default class OrderController {
@@ -69,6 +70,37 @@ export default class OrderController {
 
         } catch (error) {
             res.status(500).send({ success: false, message: 'Error al crear orden', error });
+        }
+    }
+
+    static async assignDelivery(req, res) {
+        try {
+            const delivery = req.params.id;
+            const user = req.body.user._id;
+
+            if (!delivery) return res.status(500).send({ success: false, message: 'Datos incompletos, intenta otra vez' });
+            if (!isValidId(delivery)) return res.status(500).send({ success: false, message: 'Id de repartidor inválido' });
+            
+            const foundDelivery = await UserModel.findById(delivery);
+            if (!foundDelivery) return res.status(500).send({ success: false, message: 'Repartidor no encontrado' });
+
+            let order = await OrderModel.findOneAndUpdate({ user: user }, { delivery: delivery, status: 'DESPACHADO' });
+            if (!order) return res.status(500).send({ success: false, message: 'Error al asignar repartidor', error });
+            
+            await order.populate('delivery address').populate('user', '-password').populate({ path: 'cart', populate: { path: 'products._id', populate: { path: 'category' } } }).execPopulate();
+
+            order = order.map(element => {
+                let order = element.toObject();  
+                const products = order.cart.products.map(product => new Object({ quantity: product.quantity, product: product._id } ));
+                order.cart.products = products;
+
+                return order;
+            });
+
+            res.status(200).send({ success: true, message: 'Repartidor asignado', data: order });
+
+        } catch (error) {
+            res.status(500).send({ success: false, message: 'Error al asignar repartidor', error });
         }
     }
 

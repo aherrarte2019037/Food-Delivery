@@ -75,6 +75,19 @@ export default class UserController {
         }
     }
 
+    static async getByRole(req, res) {
+        try {
+            const role = req.params.role;
+            if (!role || typeof role !== 'string') res.status(500).send({ success: false, message: 'Role incorrecto, intenta otra vez', error, data: [] });
+            
+            const users = await UserModel.find({ 'roles.name': role.toUpperCase() });
+            res.status(200).send({ success: true, message: 'Usuarios por rol', data: users });
+
+        } catch (error) {
+            res.status(500).send({ success: false, message: 'Error al obtener usuarios', error, data: [] });
+        }
+    }
+
     static async getAll(req, res) {
         try {
             const users = await UserModel.find();
