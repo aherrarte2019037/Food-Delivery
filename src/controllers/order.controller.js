@@ -75,31 +75,28 @@ export default class OrderController {
 
     static async assignDelivery(req, res) {
         try {
-            const delivery = req.params.id;
-            const user = req.body.user._id;
+            const delivery = req.body.delivery;
+            const orderId = req.params.id;
 
-            if (!delivery) return res.status(500).send({ success: false, message: 'Datos incompletos, intenta otra vez' });
-            if (!isValidId(delivery)) return res.status(500).send({ success: false, message: 'Id de repartidor inválido' });
+            if (!delivery || !orderId) return res.status(500).send({ success: false, message: 'Datos incompletos, intenta otra vez' });
+            if (!isValidId(orderId)) return res.status(500).send({ success: false, message: 'Id de pedido inválido' });
             
             const foundDelivery = await UserModel.findById(delivery);
             if (!foundDelivery) return res.status(500).send({ success: false, message: 'Repartidor no encontrado' });
 
-            let order = await OrderModel.findOneAndUpdate({ user: user }, { delivery: delivery, status: 'DESPACHADO' });
+            const order = await OrderModel.findByIdAndUpdate(orderId, { delivery: delivery, status: 'DESPACHADO' });
             if (!order) return res.status(500).send({ success: false, message: 'Error al asignar repartidor', error });
             
             await order.populate('delivery address').populate('user', '-password').populate({ path: 'cart', populate: { path: 'products._id', populate: { path: 'category' } } }).execPopulate();
+            
+            let response = order.toObject();  
+            const products = response.cart.products.map(product => new Object({ quantity: product.quantity, product: product._id } ));
+            response.cart.products = products;
 
-            order = order.map(element => {
-                let order = element.toObject();  
-                const products = order.cart.products.map(product => new Object({ quantity: product.quantity, product: product._id } ));
-                order.cart.products = products;
-
-                return order;
-            });
-
-            res.status(200).send({ success: true, message: 'Repartidor asignado', data: order });
+            res.status(200).send({ success: true, message: 'Repartidor asignado', data: response });
 
         } catch (error) {
+            console.log(error)
             res.status(500).send({ success: false, message: 'Error al asignar repartidor', error });
         }
     }
