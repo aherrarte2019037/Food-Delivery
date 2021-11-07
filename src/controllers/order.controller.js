@@ -17,7 +17,17 @@ export default class OrderController {
 
     static async groupByStatus(req ,res) {
         try {
-            let orders = await OrderModel.find({}).populate('delivery address').populate('user', '-password').populate({ path: 'cart', populate: { path: 'products._id', populate: { path: 'category' } } });            
+            const user = req.body.user;
+            let isDelivery = false;
+
+            for (let index = 0; index < user.roles.length; index++) {
+                if (user.roles[index].name === 'DELIVERY') {
+                    isDelivery = true;
+                    break;
+                };
+            }
+
+            let orders = await OrderModel.find(isDelivery ? { status: { $ne: 'PAGADO' } } : {}).populate('delivery address').populate('user', '-password').populate({ path: 'cart', populate: { path: 'products._id', populate: { path: 'category' } } });            
             orders = orders.map(element => {
                 let order = element.toObject();  
                 const products = order.cart.products.map(product => new Object({ quantity: product.quantity, product: product._id } ));
