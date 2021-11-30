@@ -12,6 +12,8 @@ import ProductCategoryController from './controllers/product/category.controller
 import Passport from 'passport';
 import './auth/passport.js';
 import firebaseAdmin from 'firebase-admin';
+import { Server } from "socket.io";
+import { trackDeliverySocket } from './sockets/order.socket.js';
 
 const app = express();
 
@@ -21,6 +23,10 @@ const firebaseCredentials = JSON.parse(await readFile('./accountStorageKey.json'
 firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.cert(firebaseCredentials)
 });
+
+//Sockets
+const io = new Server({});
+trackDeliverySocket(io);
 
 //Configuración
 Passport.initialize();

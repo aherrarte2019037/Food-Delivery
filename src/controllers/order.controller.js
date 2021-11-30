@@ -19,22 +19,26 @@ export default class OrderController {
         try {
             const user = req.body.user;
             let isDelivery = false;
+            let isClient = false;
 
             for (let index = 0; index < user.roles.length; index++) {
-                if (user.roles[index].name === 'DELIVERY') {
-                    isDelivery = true;
-                    break;
-                };
+                if (user.roles[index].name === 'DELIVERY') isDelivery = true;;
+                if (user.roles[index].name === 'CLIENT') isClient = true;;
             }
 
-            let deliveryQuery = {
-                $and: [
-                    { status: { $ne: 'PAGADO' } },
-                    { delivery: user._id }
-                ]
+            let query = {};
+            if (isDelivery) {
+                query = {
+                    $and: [
+                        { status: { $ne: 'PAGADO' } },
+                        { delivery: user._id }
+                    ]
+                }
             };
+            if (isClient) query = { user: user._id }
+            
 
-            let orders = await OrderModel.find(isDelivery ? deliveryQuery : {}).populate('delivery address').populate('user', '-password').populate({ path: 'cart', populate: { path: 'products._id', populate: { path: 'category' } } });            
+            let orders = await OrderModel.find(query).populate('delivery address').populate('user', '-password').populate({ path: 'cart', populate: { path: 'products._id', populate: { path: 'category' } } });            
             orders = orders.map(element => {
                 let order = element.toObject();  
                 const products = order.cart.products.map(product => new Object({ quantity: product.quantity, product: product._id } ));
