@@ -124,14 +124,22 @@ export default class OrderController {
     static async edit(req, res) {
         try {
             const order = req.params.id;
-            const updateData = req.body;
-            delete updateData.user;
+            let updateData = {};
+
+            const data = req.body;
+            delete data.user;
+
+            for (const key in data) {
+                if (Object.hasOwnProperty.call(data, key)) {
+                    if (data[key] !== undefined && data[key] !== null) updateData[key] = data[key];
+                }
+            }
 
             const orderFound = await OrderModel.findById(order);
             if (!orderFound ) return res.status(500).send({ success: false, message: 'Pedido no encontrado' });
 
             if (updateData.status) updateData.status = updateData.status.toUpperCase();
-
+            
             const orderEdited = await OrderModel.findByIdAndUpdate(order, updateData);
             if (!orderEdited ) return res.status(500).send({ success: false, message: 'Error al editar pedido' });
 

@@ -5,6 +5,7 @@ export function trackDeliverySocket(io) {
         console.log('USER CONNECTED TO /orders/delivery/tracker');
 
         socket.on('position', (data) => {
+            data = JSON.parse(data);
             deliveryTrackerNamespace.emit(`position/${data.order}`, { latitude: data.latitude, longitude: data.longitude });
         });
 
