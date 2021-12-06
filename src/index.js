@@ -12,7 +12,7 @@ import ProductCategoryController from './controllers/product/category.controller
 import Passport from 'passport';
 import './auth/passport.js';
 import firebaseAdmin from 'firebase-admin';
-import { Server } from "socket.io";
+import Server from 'socket.io';
 import { trackDeliverySocket } from './sockets/order.socket.js';
 
 const app = express();
@@ -23,10 +23,6 @@ const firebaseCredentials = JSON.parse(await readFile('./accountStorageKey.json'
 firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.cert(firebaseCredentials)
 });
-
-//Sockets
-const io = new Server({});
-trackDeliverySocket(io);
 
 //Configuración
 Passport.initialize();
@@ -48,7 +44,11 @@ app.use('/api/products/categories', ProductCategoryRoutes);
 app.use('/api/products', ProductRoutes);
 
 //Iniciar servidor
-app.listen( process.env.PORT || app.get('PORT'), () => {
+const server = app.listen( process.env.PORT || app.get('PORT'), () => {
     console.log(`Server started on port ${app.get('PORT')}`);
     ProductCategoryController.createDefaultCategory();
 });
+
+//Sockets
+const io = Server(server);
+trackDeliverySocket(io);
