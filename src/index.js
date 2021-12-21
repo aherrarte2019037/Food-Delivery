@@ -14,6 +14,10 @@ import './auth/passport.js';
 import firebaseAdmin from 'firebase-admin';
 import Server from 'socket.io';
 import { trackDeliverySocket } from './sockets/order.socket.js';
+import dotenv from 'dotenv'
+
+//Variables de entorno
+dotenv.config()
 
 const app = express();
 
